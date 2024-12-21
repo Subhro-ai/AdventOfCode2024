@@ -34,6 +34,8 @@ public class part_1 {
 
             int[] initArr = getIndex(init);
             int[] finArr = getIndex(fin);
+            // System.out.println("initArr" + initArr[0] + " " +initArr[1]);
+            // System.out.println("finArr" + finArr[0] + " " + finArr[1]);
 
             // If either init or fin is not found, do not proceed further
             if (initArr == null || finArr == null) {
@@ -41,10 +43,9 @@ public class part_1 {
                 return null;
             }
 
-            int[] move = { (initArr[0] - finArr[0]), (initArr[1] - finArr[1]) };
-            // System.out.println(move[0] + "" + move[1]);
-
-            // Handle movement in horizontal direction (left-right)
+            int[] move = { (finArr[0] - initArr[0]), (finArr[1] - initArr[1]) };
+            // System.out.println(move[0] + " " + move[1]);
+            
             for (int i = 0; i < Math.abs(move[0]); i++) {
                 if (move[0] > 0) {
                     path.add(">");
@@ -52,11 +53,11 @@ public class part_1 {
                     path.add("<");
                 }
             }
-            for (int j = 0; j < Math.abs(move[0]); j++) {
-                if (move[0] > 0) {
-                    path.add("^");
+            for (int j = 0; j < Math.abs(move[1]); j++) {
+                if (move[1] > 0) {
+                    path.add("V");
                 } else {
-                    path.add("v");
+                    path.add("^");
                 }
             }
             path.add("A");
@@ -68,7 +69,7 @@ public class part_1 {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 3; j++) {
                 if (keypad[i][j] != null && keypad[i][j].equals(a)) {
-                    return new int[] { i, j };
+                    return new int[] { j, i };
                 }
             }
         }
