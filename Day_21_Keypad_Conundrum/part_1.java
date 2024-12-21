@@ -15,7 +15,7 @@ public class part_1 {
             while ((line = br.readLine()) != null) {
                 path = keypadPath(line);
                 System.out.println(line);
-                tSystem.out.println(path);
+                System.out.println(path);
             }
         } catch (IOException e) {
             e.printStackTrace();
