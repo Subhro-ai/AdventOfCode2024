@@ -5,9 +5,7 @@ import java.util.*;
 
 
 public class part_1 {
-    static String keypad[][] = { { "7", "8", "9" }, { "4", "5", "6" }, { "1", "2", "3" }, { "null", "0", "A" } };
-    static String directionpad[][] = { { null, "^", "A" }, { "<", "V", ">" } };
-    
+    static String keypad[][] = { { "7", "8", "9" }, { "4", "5", "6" }, { "1", "2", "3" }, { "null", "0", "A" } };    
 
     public static void main(String[] args) {
         int sum = 0;
@@ -32,52 +30,34 @@ public class part_1 {
 
     public static ArrayList<String> keypadPath(String line) {
         ArrayList<String> path = new ArrayList<>();
-        String init = "A";
-        String fin = "A";
-        // System.out.println(line);
+        String init = "A"; // Start at A
         for (int k = 0; k < line.length(); k++) {
-            init = fin;
-            fin = String.valueOf(line.charAt(k));
-            // System.out.println("From " + init + " To " + fin);
-
+            String fin = String.valueOf(line.charAt(k));
             int[] initArr = getIndex(init);
             int[] finArr = getIndex(fin);
-            // System.out.println("initArr" + initArr[0] + " " +initArr[1]);
-            // System.out.println("finArr" + finArr[0] + " " + finArr[1]);
-
-            // If either init or fin is not found, do not proceed further
             if (initArr == null || finArr == null) {
-                // System.out.println("Invalid input: " + init + " or " + fin + " not found.");
-                return null;
+                throw new IllegalArgumentException("Invalid input character: " + fin);
             }
-
-            int[] move = { (finArr[0] - initArr[0]), (finArr[1] - initArr[1]) };
-            // System.out.println(move[0] + " " + move[1]);
-            
+            // Calculate moves
+            int[] move = { finArr[0] - initArr[0], finArr[1] - initArr[1] };
             for (int i = 0; i < Math.abs(move[0]); i++) {
-                if (move[0] > 0) {
-                    path.add(">");
-                } else {
-                    path.add("<");
-                }
+                path.add(move[0] > 0 ? ">" : "<");
             }
             for (int j = 0; j < Math.abs(move[1]); j++) {
-                if (move[1] > 0) {
-                    path.add("V");
-                } else {
-                    path.add("^");
-                }
+                path.add(move[1] > 0 ? "V" : "^");
             }
-            path.add("A");
+            path.add("A"); // Add only after completing moves
+            init = fin; // Update initial position
         }
         return path;
     }
+    
 
     public static int[] getIndex(String a) {
         for (int i = 0; i < 4; i++) {
             for (int j = 0; j < 3; j++) {
                 if (keypad[i][j] != null && keypad[i][j].equals(a)) {
-                    return new int[] { j, i };
+                    return new int[] { i, j };
                 }
             }
         }
@@ -85,51 +65,28 @@ public class part_1 {
     }
 
     public static ArrayList<String> directionpadPath(ArrayList<String> givenPath) {
-        int initIndex[] = {2, 0};
-        int finIndex[] = {2, 0};
+        int[] initIndex = { 2, 0 }; // Starting position ("A")
         ArrayList<String> directionPath = new ArrayList<>();
         for (String direction : givenPath) {
-            initIndex = finIndex;
-            finIndex = getDirectionIndex(direction);
-            if (initIndex == null || finIndex == null) {
-                // System.out.println("Invalid input: " + init + " or " + fin + " not found.");
-                return null;
+            int[] finIndex = getDirectionIndex(direction);
+            if (finIndex == null) {
+                throw new IllegalArgumentException("Invalid direction: " + direction);
             }
-            int move[] = {(finIndex[0] - initIndex[0]), (finIndex[1] - initIndex[1])};
+            // Calculate moves
+            int[] move = { finIndex[0] - initIndex[0], finIndex[1] - initIndex[1] };
             for (int i = 0; i < Math.abs(move[0]); i++) {
-                if (move[0] > 0) {
-                    directionPath.add(">");
-                    initIndex[0] += 1;
-                } 
-                else {
-                    directionPath.add("<");
-                    initIndex[0] -= 1;
-                }
-                // if (initIndex[0] == 0 && initIndex[1] == 0) {
-                //     initIndex[0] += 1;
-                //     initIndex[1] += 1;
-                //     directionPath.add("V");
-                // }
+                directionPath.add(move[0] > 0 ? ">" : "<");
             }
             for (int j = 0; j < Math.abs(move[1]); j++) {
-                if (move[1] > 0) {
-                    directionPath.add("V");
-                    initIndex[1] += 1;
-                } 
-                else {
-                    directionPath.add("^");
-                    initIndex[1] -= 1;
-                }
-                if (initIndex[0] == 0 && initIndex[1] == 0) {
-                    // System.out.println("X" + initIndex[0] + "Y" + initIndex[1]);
-                    directionPath.add("V");
-                }
+                directionPath.add(move[1] > 0 ? "V" : "^");
             }
-            directionPath.add("A");
+            directionPath.add("A"); // Add only after completing moves
+            initIndex = finIndex; // Update position
         }
-        // System.out.println(directionPath);
         return directionPath;
     }
+    
+    
     public static int[] getDirectionIndex(String input) {
         if (input == "<") return new int[]{0, 1};
         if (input == ">") return new int[]{2, 1};
